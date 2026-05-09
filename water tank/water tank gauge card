@@ -1,0 +1,14 @@
+# In gallons my tank is 3000gal. Use "Manual Card" at the bottom on Dashboard editor, copy and paste.
+type: gauge
+entity: sensor.porch_esp_water_tank_volume
+min: 0
+max: 3000
+name: Porch Tank Level
+needle: true
+segments:
+  - from: 0
+    color: '#db4437' # Red for critically low (< 500 gal)
+  - from: 500
+    color: '#ffa600' # Yellow for warning (500 - 1000 gal)
+  - from: 1000
+    color: '#43a047' # Green for healthy level (> 1000 gal)
