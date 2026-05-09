@@ -1,0 +1,4 @@
+  - platform: dallas_temp
+    address: (INSERT ID0
+    name: temperature
+    update_interval: 30s #I prefer 120s typically
