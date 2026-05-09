@@ -1,0 +1,49 @@
+esphome:
+  name: 
+  friendly_name: 
+  min_version: 2024.11.0
+  name_add_mac_suffix: false
+
+esp32:
+  board: esp32dev
+  framework:
+    type: esp-idf
+
+# Required standard integrations
+api:
+logger:
+ota:
+  - platform: esphome
+
+wifi:
+  ssid: "YOUR_WIFI_SSID"
+  password: "YOUR_WIFI_PASSWORD"
+
+captive_portal:
+
+sensor:
+  - platform: ultrasonic
+    trigger_pin: GPIO19
+    echo_pin: GPIO18
+    name: "Water Tank Volume"
+    unit_of_measurement: "gal"
+    icon: "mdi:water-pump"
+    accuracy_decimals: 0
+    # Refreshes the sensor every 60 seconds
+    update_interval: 60s
+    filters:
+      # Drops invalid readings
+      - filter_out: nan
+      # Calculates the remaining gallons based on a 2.32m depth and 3000gal capacity
+      - lambda: |-
+          float tank_depth = 2.32; // Total depth in meters
+          float max_volume = 3000.0; // Total capacity in gallons
+          
+          // Cap the raw distance to prevent negative gallons or values over 3000
+          if (x > tank_depth) x = tank_depth;
+          if (x < 0.0) x = 0.0;
+          
+          // Calculate water level: (1 - (distance_from_sensor / total_depth)) * max_volume
+          return (1.0 - (x / tank_depth)) * max_volume;
+
+# Needs 5v to HC-SR04 or JSN-SR04T (waterproof sensor)
